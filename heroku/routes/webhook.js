@@ -185,7 +185,6 @@ module.exports = function(req, res) {
 						pairings
 						source
 					}
-				}
 			}
 		}
 	}`;
