@@ -206,7 +206,7 @@ module.exports = (req, res) => {
 		_.each(items, item => {
 			var object = item
 			item.objectID = item._id;
-			if (item.photo) item.photoUrl = 'https://images.takeshape.io/' + item.photo.path;
+			if (item.labelOrPhoto) item.photoUrl = 'https://images.takeshape.io/' + item.photo.path;
 			list.push(item)
 		})
 

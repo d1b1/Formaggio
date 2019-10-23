@@ -191,10 +191,12 @@ module.exports = function(req, res) {
 
 	takeshape(query).then(result => {
 
-		console.log(result);
+		console.log(`\n${result}\n`);
 
 		var obj = result.data[body.data.queryName];
 		obj.objectID = obj._id
+
+		if (obj.labelOrPhoto) obj.photoUrl = 'https://images.takeshape.io/' + obj.labelOrPhoto.path;
 
 		index.addObject(obj, () => {
 			console.log(`Indexed ${body.data.contentTypeName} id: ${body.data.contentId} `)
