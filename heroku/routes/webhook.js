@@ -22,8 +22,8 @@ module.exports = function(req, res) {
 	}
 
 	var query = ` {
-		${body.data.queryName}(_id: "${body.data.contentId}") {
-			_id
+  ${body.data.queryName}(_id: "${body.data.contentId}") {
+		_id
     agents {
       _id
       address {
@@ -185,8 +185,9 @@ module.exports = function(req, res) {
         pairings
         source
       }
-		}
-	}`;
+    }
+   }
+  }`;
 
 	takeshape(query).then(result => {
 
