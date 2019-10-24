@@ -207,7 +207,9 @@ module.exports = function(req, res) {
 		obj.objectID = obj._id
 
 		if (obj.labelOrPhoto) obj.photoUrl = 'https://images.takeshape.io/' + obj.labelOrPhoto.path;
-		if (obj.agents.geoloc) obj._geoloc = obj.agents.geoloc
+		if (obj.agents && obj.agents.length > 0) {
+			if (obj.agents[0].geoloc) obj._geoloc = obj.agents[0].geoloc
+		}
 
 		index.addObject(obj, () => {
 			console.log(`Indexed ${body.data.contentTypeName} id: ${body.data.contentId} `)

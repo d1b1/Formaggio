@@ -13,7 +13,7 @@ function initSearch() {
 	  const search = instantsearch({
 			searchClient: algoliasearch(opts.appId, opts.apiKey),
 	    indexName: opts.indexName,
-	    // searchFunction: opts.searchFunction,
+	    searchFunction: opts.searchFunction,
 	  });
 
 		search.addWidget(
