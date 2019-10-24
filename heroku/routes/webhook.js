@@ -26,10 +26,6 @@ module.exports = function(req, res) {
 		_id
     agents {
       _id
-			geoloc {
-	      lat
-	      lng
-	    }
       address {
         addressLine1
         addressLine2
@@ -40,6 +36,10 @@ module.exports = function(req, res) {
       }
       descriptionSummary
       email
+      geoloc {
+        lat
+        lng
+      }
       logo {
         _id
         caption
@@ -119,6 +119,10 @@ module.exports = function(req, res) {
         }
         descriptionSummary
         email
+        geoloc {
+          lat
+          lng
+        }
         name
         operators
         phone
