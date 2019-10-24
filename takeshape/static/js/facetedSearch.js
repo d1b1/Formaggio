@@ -40,15 +40,35 @@ function app(opts) {
       container: '#hits',
       templates: {
 				item: `
-					<div style="padding-top: 20px; padding-bottom: 20px; border-bottom: 1px solid #DFDFDF;">
-						<h3 class="is-size-4">
-							{{{ _highlightResult.name.value }}}
-						</h3>
-						<br>
-						<span class="clearfix">
-							Aged: {{ characteristics.aged }},
-							Milks: {{ characteristics.milk }}
-						</span>
+					<div class="columns" style="padding-top: 20px; padding-bottom: 20px; border-bottom: 1px solid #DFDFDF;">
+
+							<div class="is-one-fifth">
+
+								<figure class="image is-96x96" style="padding: 5px; border:1px solid #DFDFDF; float: left; margin-right: 10px;">
+									<img src="{{ photoUrl}}">
+								</figure>
+
+							</div>
+
+							<div class="is-four-fifth">
+
+								<h3 class="is-size-3">
+									{{{ _highlightResult.name.value }}}
+
+									<p class="is-size-7 clearfix">
+										{{ characteristics.flavors }}
+									</p>
+
+								</h3>
+
+								<span class="clearfix">
+									<b>Aged</b>: {{ characteristics.aged }},
+									<b>Milks</b>: {{ characteristics.milk }},
+									<b>Texture</b>: {{ characteristics.texture }}
+								</span>
+
+							</div>
+
 					</div>
 				`,
         empty: `
@@ -70,7 +90,7 @@ function app(opts) {
 
   search.addWidget(
     instantsearch.widgets.stats({
-      container: '#stats',
+      container: '#stats'
     })
   );
 
@@ -114,9 +134,35 @@ function app(opts) {
     })
   );
 
+	// Use this widget to add the list of Coverings.
+	search.addWidget(
+    instantsearch.widgets.refinementList({
+      container: '#texture',
+      attribute: 'characteristics.texture',
+			showMore: false,
+			showMoreLimit: 10,
+			searchable: false,
+      templates: {
+				item: `
+		      <a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
+		        <span>{{label}} ({{count}})</span>
+		      </a>
+		    `,
+				noResults: '<div class="sffv_no-results">No matching brands.</div>',
+				noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
+      }
+    })
+  );
+
 	search.addWidget(
 		instantsearch.widgets.clearRefinements({
-		  container: "#clearAll"
+		  container: "#clearAll",
+			templates: {
+				resetLabel: 'Reset',
+			},
+			cssClasses: {
+				button: 'button is-small'
+			}
 		})
 	);
 

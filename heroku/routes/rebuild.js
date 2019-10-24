@@ -3,23 +3,13 @@ const _ = require('underscore')
 const titleCase = require('title-case')
 
 // Services
-const algolia = require('../services/algolia');
+const algolia = require('../services/algolia')
 const takeshape = require('../services/takeshape')
-
-// Setup the index.
-const index = algolia.initIndex('cheese');
 
 module.exports = (req, res) => {
 
-	if (!req.query.contentType) {
-		res.status(200).send('Sorry you need to the the content type. ?contentType=cheese')
-		return
-	}
-
-	// Set the query name.
-	var queryName = 'get' + titleCase(req.query.contentType) + 'List'
-
-	// Set the Query for the content type.
+	const index = algolia.initIndex('cheese')
+	var queryName = 'getCheeseList'
 	var query = `{
 		${queryName} {
 			items {
