@@ -26,7 +26,10 @@ module.exports = function(req, res) {
 		_id
     agents {
       _id
-			geoloc
+			geoloc {
+	      lat
+	      lng
+	    }
       address {
         addressLine1
         addressLine2
@@ -200,7 +203,7 @@ module.exports = function(req, res) {
 		obj.objectID = obj._id
 
 		if (obj.labelOrPhoto) obj.photoUrl = 'https://images.takeshape.io/' + obj.labelOrPhoto.path;
-		if (obj.geoloc) obj._geoloc = obj.geoloc
+		if (obj.agents.geoloc) obj._geoloc = obj.agents.geoloc
 
 		index.addObject(obj, () => {
 			console.log(`Indexed ${body.data.contentTypeName} id: ${body.data.contentId} `)
