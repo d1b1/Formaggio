@@ -71,6 +71,7 @@ module.exports = function(req, res) {
       style
       texture
     }
+		geoloc
     description
     labelOrPhoto {
       _id
@@ -199,7 +200,8 @@ module.exports = function(req, res) {
 		obj.objectID = obj._id
 
 		if (obj.labelOrPhoto) obj.photoUrl = 'https://images.takeshape.io/' + obj.labelOrPhoto.path;
-
+		if (obj.geoloc) obj._geoloc = obj.geoloc
+		
 		index.addObject(obj, () => {
 			console.log(`Indexed ${body.data.contentTypeName} id: ${body.data.contentId} `)
 			res.status(200).send(`Handled a Webhook Request for ${body.data.contentTypeName} id: ${body.data.contentId}`)
