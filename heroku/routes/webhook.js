@@ -119,7 +119,7 @@ module.exports = function(req, res) {
         }
         descriptionSummary
         email
-        geoloc {
+        geoloc { 
           lat
           lng
         }
