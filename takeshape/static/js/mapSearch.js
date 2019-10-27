@@ -1,137 +1,62 @@
 
-function initSearch() {
+$script(
+  'https://maps.googleapis.com/maps/api/js?v=weekly&key=AIzaSyCZV7qjwy_JL03EguX6JcmplaFYKzZkK28',
+	// 'https://maps.googleapis.com/maps/api/js?v=weekly&key=AIzaSyBawL8VbstJDdU5397SUX7pEt9DslAwWgQ',
+  function() {
+    // var search = instantsearch({
+    //   searchClient: algoliasearch(
+    //     'latency',
+    //     '6be0576ff61c053d5f9a3225e2a90f76'
+    //   ),
+    //   indexName: 'airbnb',
+    //   routing: true,
+    // });
 
-	console.log('Starting the Search now');
-
-	app({
-		appId: 'OBBTFVLBPT',
-		apiKey: 'b2bb1464328d945084725777e82f0536',
-		indexName: 'cheese',
-	});
-
-	function app(opts) {
-	  const search = instantsearch({
-			searchClient: algoliasearch(opts.appId, opts.apiKey),
-	    indexName: opts.indexName,
-	    searchFunction: opts.searchFunction,
+	  var search = instantsearch({
+			searchClient: algoliasearch('OBBTFVLBPT', 'b2bb1464328d945084725777e82f0536'),
+	    indexName: 'cheese',
+			routing: true
 	  });
 
-		search.addWidget(
+		search.addWidgets([
+
 			instantsearch.widgets.configure({
-				hitsPerPage: 100,
-				aroundLatLngViaIP: true,
-			})
-		)
+				hitsPerPage: 1000,
+				aroundLatLngViaIP: true
+			}),
 
-		search.addWidget(
 			instantsearch.widgets.poweredBy({
-			  container: '#powered-by',
-			})
-		);
+			  container: '#powered-by'
+			}),
 
-	  search.addWidget(
 	    instantsearch.widgets.searchBox({
 	      container: '#search-query',
 				cssClasses: {
 					input: 'input is-large'
 				},
 	      placeholder: 'Search for cheese info...'
-	    })
-	  );
+	    }),
 
-		search.addWidget(
 			instantsearch.widgets.geoSearch({
 			  container: '#map',
-			  googleReference: window.google,
-			  initialZoom: 1,
+				googleReference: window.google,
+			  initialZoom: 5,
 			  enableRefine: true,
 			  enableClearMapRefinement: true,
 			  enableRefineControl: true,
 			  enableRefineOnMapMove: true,
-			  //templates: object,
-			  //cssClasses: object,
-				// initialPosition: object,
-				// mapOptions: object,
-				// builtInMarker: object,
-				// customHTMLMarker: object,
-			})
-		);
-
-	  search.addWidget(
-	    instantsearch.widgets.stats({
-	      container: '#stats',
-	    })
-	  );
-
-		// Use this widget to add the list of Coverings.
-		search.addWidget(
-	    instantsearch.widgets.refinementList({
-	      container: '#covering',
-	      attribute: 'characteristics.covering',
-				showMore: false,
-				showMoreLimit: 10,
-				searchable: false,
-	      templates: {
-					item: `
-			      <a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
-			        <span>{{label}} ({{count}})</span>
-			      </a>
-			    `,
-					noResults: '<div class="sffv_no-results">No matching brands.</div>',
-					noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
-	      }
-	    })
-	  );
-
-		search.addWidget(
-			instantsearch.widgets.clearRefinements({
-			  container: "#clearAll"
-			})
-		);
-
-	  search.addWidget(
-	    instantsearch.widgets.refinementList({
-	      container: '#milk',
-	      attribute: 'characteristics.milk',
-	      showMore: false,
-				showMoreLimit: 10,
-				searchable: false,
-				cssClasses: {
-					searchableInput: "input is-large",
+				initialPosition: {
+					lat: 42.338477,
+					lng: -71.073187
 				},
-	      templates: {
-					item: `
-						<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
-							<span>
-								{{label}} ({{count}})
-							</span>
-						</a>
-					`,
-					noResults: '<div class="sffv_no-results">No matching brands.</div>',
-					noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
-	      }
-	    })
-	  );
+			}),
 
-		search.addWidget(
-	    instantsearch.widgets.refinementList({
-	      container: '#aged',
-	      attribute: 'characteristics.aged',
-				showMore: false,
-				showMoreLimit: 10,
-				searchable: false,
-	      templates: {
-					item: `
-						<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
-							<span>{{label}} ({{count}})</span>
-						</a>
-					`,
-					noResults: '<div class="sffv_no-results">No matching brands.</div>',
-					noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
-	      },
-	    })
-	  );
+	    // instantsearch.widgets.stats({
+	    //   container: '#stats'
+	    // })
 
-	  search.start();
+	  ])
+
+		search.start();
 	}
-}
+);

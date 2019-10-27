@@ -64,25 +64,14 @@
 		</div>
 	</div>
 
+	<!-- <script src="https://cdn.jsdelivr.net/npm/scriptjs@2.5.9/dist/script.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/algoliasearch@3.35.0/dist/algoliasearchLite.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.7.0/dist/instantsearch.production.min.js"></script> -->
 
-	<script src="https://cdn.jsdelivr.net/npm/algoliasearch@3.32.0/dist/algoliasearchLite.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.0.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/scriptjs@2.5.9/dist/script.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/algoliasearch@3.32.0"></script>
+	<script src="https://instantsearchjs.netlify.com/examples/tourism/instantsearch.production.min.js"></script>
 
 	<script src="/js/mapSearch.js"></script>
-
-	<script>
-		var map;
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.397, lng: 150.644},
-        zoom: 8
-      });
-
-			initSearch();
-    }
-	</script>
-
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZV7qjwy_JL03EguX6JcmplaFYKzZkK28&callback=initMap" async defer></script>
-
 
 {% endblock %}
