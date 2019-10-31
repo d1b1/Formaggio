@@ -23,7 +23,6 @@ routes:
 
   autoComplete:
     path: /autoComplete
-    context: data/cheese.graphql
     template: pages/autoComplete.html
 
   tools:
