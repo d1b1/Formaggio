@@ -2,7 +2,7 @@ const fetch = require('node-fetch').default;
 const TAKESHAPE_PROJECTID = process.env.TAKESHAPE_PROJECTID
 const TAKESHAPE_KEY = process.env.TAKESHAPE_KEY
 
-module.exports = (query) => {
+module.exports = (query, variables) => {
 
 	return new Promise((resolve, reject) => {
 

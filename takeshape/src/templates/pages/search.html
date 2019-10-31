@@ -2,79 +2,72 @@
 
 {% block content %}
 
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.3/dist/instantsearch.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="https://preview.algolia.com/instantsearch//assets/style.css"> -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+
 	<style>
-    .algolia-autocomplete {
-      width: 100%;
-    }
-    .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
-      width: 100%;
-    }
-    .algolia-autocomplete .aa-hint {
-      color: #999;
-    }
-    .algolia-autocomplete .aa-dropdown-menu {
-      width: 100%;
-      background-color: #fff;
-      border: 1px solid #999;
-      border-top: none;
-    }
-    .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
-      cursor: pointer;
-      padding: 5px 4px;
-    }
-    .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
-      background-color: #B2D7FF;
-    }
-    .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
-      font-weight: bold;
-      font-style: normal;
-    }
-  </style>
+		em { font-weight: bold; font-style: normal; }
 
-	<section class="hero">
-	  <div class="hero-body">
-	    <div class="container">
-	      <h1 class="title">
-	        Simple Cheese Auto Complete
-	      </h1>
-	      <h2 class="subtitle">
-	        Type a name and see a short list of results.
-	      </h2>
-	    </div>
-			<br>
-			<div class="field">
-				<div class="control is-large is-loading">
-					<form action="#" class="form">
-						<input class="input is-large" id="contacts" name="contacts" type="text" placeholder='Search by name' />
-					</form>
-				</div>
+		.ais-Hits-list {
+    	list-style-type: none;
+		}
+
+		.clearfix:after{
+			display:block;
+			clear:both;
+			content:""
+	  }
+	</style>
+
+	<div class="container">
+		<div class="columns">
+			<div class="column is-full">
+				<div id="search-query"></div>
 			</div>
-			<pre id="contactsJSON">Hint: Use the search to find a cheese.</pre>
 		</div>
+		<div class="columns">
+			<div class="column is-one-fifths">
 
-	</section>
+				<b>Milk Types</b>
+				<div id="milk" class="facet"></div>
+				<br>
 
-	<script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
-	<script>
-		var client = algoliasearch('OBBTFVLBPT', 'b2bb1464328d945084725777e82f0536');
-		var index = client.initIndex('cheese');
-		$('#contacts').autocomplete({ hint: false }, [
-			{
-				source: $.fn.autocomplete.sources.hits(index, { hitsPerPage: 10 }),
-				displayKey: 'name',
-				templates: {
-					suggestion: function(suggestion) {
-						return suggestion._highlightResult.name.value;
-					}
-				}
-			}
-		]).on('autocomplete:selected', function(event, suggestion, dataset) {
-			var data = JSON.stringify(suggestion, null, '  ');
-			$('#contactsJSON').text(data);
-			$('#contactsJSON').show();
-    });
-	</script>
+				<b>Texture</b>
+				<div id="texture" class="facet"></div>
+
+				<br>
+
+				<b>Covering</b>
+				<div id="covering" class="facet"></div>
+
+				<br>
+
+				<b>Age</b>
+				<div id="aged" class="facet"></div>
+
+			</div>
+
+			<div class="column is-four-fifths">
+
+				<div id="stats"></div>
+
+				<div id="clearAll" style="float: right;"></div>
+
+				<div id="active-filters"></div>
+
+				<div id="hits"></div>
+				<br>
+				<div id="pagination"></div>
+				<br>
+				<div id="powered-by"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/algoliasearch@3.32.0/dist/algoliasearchLite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.0.0"></script>
+
+	<script src="/js/facetedSearch.js"></script>
 
 {% endblock %}

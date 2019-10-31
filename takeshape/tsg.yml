@@ -5,31 +5,27 @@ buildPath: build
 routes:
   homepage:
     path: /
-    template: pages/index.html
+    template: pages/search.html
 
-  cheeseList:
+  listOfCheese:
     path: /cheeses
     template: pages/cheeseList.html
     context: data/cheese.graphql
 
-  makers:
+  listOfMakers:
     path: /makers
-    template: pages/makers.html
+    template: pages/makerList.html
     context: data/agent.graphql
-
-  tools:
-    path: /tools
-    template: pages/tools.html
 
   map:
     path: /map
     template: pages/map.html
 
-  faceted:
-    path: /faceted
-    template: pages/faceted.html
-
-  search:
-    path: /search
+  autoComplete:
+    path: /autoComplete
     context: data/cheese.graphql
-    template: pages/search.html
+    template: pages/autoComplete.html
+
+  tools:
+    path: /tools
+    template: pages/tools.html
