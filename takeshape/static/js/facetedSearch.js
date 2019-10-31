@@ -6,11 +6,11 @@ app({
 });
 
 function app(opts) {
-  const search = instantsearch({
+	const search = instantsearch({
 		searchClient: algoliasearch(opts.appId, opts.apiKey),
-    indexName: opts.indexName,
-    searchFunction: opts.searchFunction,
-  });
+		indexName: opts.indexName,
+		searchFunction: opts.searchFunction,
+	});
 
 	search.addWidget(
 		instantsearch.widgets.configure({
@@ -21,24 +21,24 @@ function app(opts) {
 
 	search.addWidget(
 		instantsearch.widgets.poweredBy({
-		  container: '#powered-by',
+			container: '#powered-by',
 		})
 	);
 
-  search.addWidget(
-    instantsearch.widgets.searchBox({
-      container: '#search-query',
+	search.addWidget(
+		instantsearch.widgets.searchBox({
+			container: '#search-query',
 			cssClasses: {
 				input: 'input is-large'
 			},
-      placeholder: 'Search for cheese info...'
-    })
-  );
+			placeholder: 'Search for cheese info...'
+		})
+	);
 
-  search.addWidget(
-    instantsearch.widgets.hits({
-      container: '#hits',
-      templates: {
+	search.addWidget(
+		instantsearch.widgets.hits({
+			container: '#hits',
+			templates: {
 				item: `
 					<div class="columns" style="padding-top: 20px; padding-bottom: 20px; border-bottom: 1px solid #DFDFDF;">
 
@@ -71,7 +71,7 @@ function app(opts) {
 
 					</div>
 				`,
-        empty: `
+				empty: `
 					<div id="no-results-message">
 						<p>
 							We didn't find any results for the search <em>"{{query}}"</em>.
@@ -79,26 +79,26 @@ function app(opts) {
 						<a href="." class='clear-all'>Clear search</a>
 					</div>
 				`
-      },
-      transformData: {
-        item(item) {
-          return item;
-        },
-      },
-    })
-  );
+			},
+			transformData: {
+				item(item) {
+					return item;
+				},
+			},
+		})
+	);
 
-  search.addWidget(
-    instantsearch.widgets.stats({
-      container: '#stats'
-    })
-  );
+	search.addWidget(
+		instantsearch.widgets.stats({
+			container: '#stats'
+		})
+	);
 
 	// Use this widget to set the input query box.
-  search.addWidget(
-    instantsearch.widgets.pagination({
-      container: '#pagination',
-      scrollTo: '#search-query',
+	search.addWidget(
+		instantsearch.widgets.pagination({
+			container: '#pagination',
+			scrollTo: '#search-query',
 			templates: {
 				last: '',
 				previous: 'Previous',
@@ -106,57 +106,55 @@ function app(opts) {
 			},
 			cssClasses: {
 				list: 'pagination-list',
-				//previousPageItem: 'pagination-previous',
-				//nextPageItem: 'pagination-next',
 				selectedItem: 'is-current',
 				link: 'pagination-link'
 			}
-    })
-  );
+		})
+	);
 
 	// Use this widget to add the list of Coverings.
 	search.addWidget(
-    instantsearch.widgets.refinementList({
-      container: '#covering',
-      attribute: 'characteristics.covering',
+		instantsearch.widgets.refinementList({
+			container: '#covering',
+			attribute: 'characteristics.covering',
 			showMore: false,
 			showMoreLimit: 10,
 			searchable: false,
-      templates: {
+			templates: {
 				item: `
-		      <a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
-		        <span>{{label}} ({{count}})</span>
-		      </a>
-		    `,
+					<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
+						<span>{{label}} ({{count}})</span>
+					</a>
+				`,
 				noResults: '<div class="sffv_no-results">No matching brands.</div>',
 				noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
-      }
-    })
-  );
+			}
+		})
+	);
 
 	// Use this widget to add the list of Coverings.
 	search.addWidget(
-    instantsearch.widgets.refinementList({
-      container: '#texture',
-      attribute: 'characteristics.texture',
+		instantsearch.widgets.refinementList({
+			container: '#texture',
+			attribute: 'characteristics.texture',
 			showMore: false,
 			showMoreLimit: 10,
 			searchable: false,
-      templates: {
+			templates: {
 				item: `
-		      <a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
-		        <span>{{label}} ({{count}})</span>
-		      </a>
-		    `,
+					<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
+						<span>{{label}} ({{count}})</span>
+					</a>
+				`,
 				noResults: '<div class="sffv_no-results">No matching brands.</div>',
 				noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
-      }
-    })
-  );
+			}
+		})
+	);
 
 	search.addWidget(
 		instantsearch.widgets.clearRefinements({
-		  container: "#clearAll",
+			container: "#clearAll",
 			templates: {
 				resetLabel: 'Reset',
 			},
@@ -166,17 +164,17 @@ function app(opts) {
 		})
 	);
 
-  search.addWidget(
-    instantsearch.widgets.refinementList({
-      container: '#milk',
-      attribute: 'characteristics.milk',
-      showMore: false,
+	search.addWidget(
+		instantsearch.widgets.refinementList({
+			container: '#milk',
+			attribute: 'characteristics.milk',
+			showMore: false,
 			showMoreLimit: 10,
 			searchable: false,
 			cssClasses: {
 				searchableInput: "input is-large",
 			},
-      templates: {
+			templates: {
 				item: `
 					<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
 						<span>
@@ -186,18 +184,18 @@ function app(opts) {
 				`,
 				noResults: '<div class="sffv_no-results">No matching brands.</div>',
 				noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
-      }
-    })
-  );
+			}
+		})
+	);
 
 	search.addWidget(
-    instantsearch.widgets.refinementList({
-      container: '#aged',
-      attribute: 'characteristics.aged',
+		instantsearch.widgets.refinementList({
+			container: '#aged',
+			attribute: 'characteristics.aged',
 			showMore: false,
 			showMoreLimit: 10,
 			searchable: false,
-      templates: {
+			templates: {
 				item: `
 					<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
 						<span>{{label}} ({{count}})</span>
@@ -205,9 +203,9 @@ function app(opts) {
 				`,
 				noResults: '<div class="sffv_no-results">No matching brands.</div>',
 				noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
-      },
-    })
-  );
+			},
+		})
+	);
 
-  search.start();
+	search.start();
 }

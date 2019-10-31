@@ -3,44 +3,44 @@
 {% block content %}
 
 	<style>
-    .algolia-autocomplete {
-      width: 100%;
-    }
-    .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
-      width: 100%;
-    }
-    .algolia-autocomplete .aa-hint {
-      color: #999;
-    }
-    .algolia-autocomplete .aa-dropdown-menu {
-      width: 100%;
-      background-color: #fff;
-      border: 1px solid #999;
-      border-top: none;
-    }
-    .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
-      cursor: pointer;
-      padding: 5px 4px;
-    }
-    .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
-      background-color: #B2D7FF;
-    }
-    .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
-      font-weight: bold;
-      font-style: normal;
-    }
-  </style>
+		.algolia-autocomplete {
+			width: 100%;
+		}
+		.algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+			width: 100%;
+		}
+		.algolia-autocomplete .aa-hint {
+			color: #999;
+		}
+		.algolia-autocomplete .aa-dropdown-menu {
+			width: 100%;
+			background-color: #fff;
+			border: 1px solid #999;
+			border-top: none;
+		}
+		.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+			cursor: pointer;
+			padding: 5px 4px;
+		}
+		.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+			background-color: #B2D7FF;
+		}
+		.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+			font-weight: bold;
+			font-style: normal;
+		}
+	</style>
 
 	<section class="hero">
-	  <div class="hero-body">
-	    <div class="container">
-	      <h1 class="title">
-	        Simple Cheese Auto Complete
-	      </h1>
-	      <h2 class="subtitle">
-	        Type a name and see a short list of results.
-	      </h2>
-	    </div>
+		<div class="hero-body">
+			<div class="container">
+				<h1 class="title">
+					Simple Cheese Auto Complete
+				</h1>
+				<h2 class="subtitle">
+					Type a name and see a short list of results.
+				</h2>
+			</div>
 			<br>
 			<div class="field">
 				<div class="control is-large is-loading">
@@ -71,10 +71,10 @@
 				}
 			}
 		]).on('autocomplete:selected', function(event, suggestion, dataset) {
-			var data = JSON.stringify(suggestion, null, '  ');
+			var data = JSON.stringify(suggestion, null, '	');
 			$('#contactsJSON').text(data);
 			$('#contactsJSON').show();
-    });
+		});
 	</script>
 
 {% endblock %}
