@@ -5,11 +5,16 @@
 //   indexName: 'cheese',
 // });
 
-var apts = instantsearch({
-  appId: 'latency',
-  apiKey: '6be0576ff61c053d5f9a3225e2a90f76',
-  indexName: 'airbnb',
+var searchClient = algoliasearch(
+	'OBBTFVLBPT',
+	'b2bb1464328d945084725777e82f0536'
+);
+
+const apts = instantsearch({
+	indexName: 'cheese',
+	searchClient,
 });
+
 
 var aptsHits = instantsearch.widgets.hits({
   container: document.querySelector('#hits'),
@@ -18,6 +23,58 @@ var aptsHits = instantsearch.widgets.hits({
     item: '{{name}}'
   }
 });
+
+// Use this widget to add the list of Coverings.
+var coverings = instantsearch.widgets.refinementList({
+	container: '#covering',
+	attribute: 'characteristics.covering',
+	//showMore: false,
+	//showMoreLimit: 10,
+	//searchable: false,
+	templates: {
+		item: `
+			<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
+				<span>{{label}} ({{count}})</span>
+			</a>
+		`,
+		noResults: '<div class="sffv_no-results">No matching brands.</div>',
+		noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
+	}
+})
+
+var texture = instantsearch.widgets.refinementList({
+	container: '#texture',
+	attribute: 'characteristics.texture',
+	showMore: false,
+	showMoreLimit: 10,
+	searchable: false,
+	templates: {
+		item: `
+			<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
+				<span>{{label}} ({{count}})</span>
+			</a>
+		`,
+		noResults: '<div class="sffv_no-results">No matching brands.</div>',
+		noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
+	}
+})
+
+var aged = instantsearch.widgets.refinementList({
+	container: '#aged',
+	attribute: 'characteristics.aged',
+	showMore: false,
+	showMoreLimit: 10,
+	searchable: false,
+	templates: {
+		item: `
+			<a href="{{url}}" style="{{#isRefined}}font-weight: bold{{/isRefined}}">
+				<span>{{label}} ({{count}})</span>
+			</a>
+		`,
+		noResults: '<div class="sffv_no-results">No matching brands.</div>',
+		noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
+	}
+})
 
 var searchBox = instantsearch.widgets.searchBox({
   container: document.querySelector('#search-query'),
@@ -92,5 +149,8 @@ var customMapWidget = {
 apts.addWidget(searchBox);
 apts.addWidget(aptsHits);
 apts.addWidget(customMapWidget);
+apts.addWidget(coverings);
+apts.addWidget(texture);
+apts.addWidget(aged);
 
 apts.start();

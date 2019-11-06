@@ -17,7 +17,7 @@ injectScript(
   'https://maps.googleapis.com/maps/api/js?key=AIzaSyAKBlmyMd5Bkdv3SrZrQtyrO77m6Wt3Z34'
 ).then(function() {
 
-    const searchClient = algoliasearch(
+    var searchClient = algoliasearch(
       'OBBTFVLBPT',
       'b2bb1464328d945084725777e82f0536'
     );
