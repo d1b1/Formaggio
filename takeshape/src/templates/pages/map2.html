@@ -1,0 +1,86 @@
+{% extends "layouts/default.html" %}
+
+{% block content %}
+
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css"/>
+
+	<style>
+		.marker {
+			width: 100px;
+			height: 100px;
+			background-color: green;
+		}
+	</style>
+
+	<style>
+		em {
+			font-weight: bold;
+			font-style: normal;
+		}
+
+		mark {
+			background-color: #DFDFDF;
+			padding: 2px;
+		}
+
+		#map {
+			width: 100%;
+			height: 500px;
+			border: 1px solid #dfdfdf;
+		}
+
+		.ais-Hits {}
+
+		.ais-Hits-list {
+			list-style-type: none;
+			border: 0px !important;
+			margin: 0px;
+		}
+
+		.ais-Hits-list h4 {
+			font-size: 14px;
+			font-weight: bold;
+			margin-bottom: 5px 10px 5px 0px;
+		}
+
+		.ais-Hits-item {
+			border: 0px;
+			border-bottom: 1px solid #DFDFDF;
+			padding: 0px;
+			margin: 3px;
+			width: 100%;
+			box-shadow: none;
+			font-size: 13px;
+			padding-bottom: 5px;
+		}
+
+		.clearfix:after {
+			display: block;
+			clear: both;
+			content:""
+		}
+
+	</style>
+
+	<div class="container">
+		<div class="columns">
+			<div class="column is-full">
+				<div id="search-query"></div>
+			</div>
+		</div>
+		<div class="columns">
+			<div class="column is-one-fifths">
+				<div id="hits"></div>
+			</div>
+			<div class="column is-four-fifths">
+				<div id="map"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/algoliasearch/3.32.0/algoliasearchLite.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.0.0"></script>
+
+  <script src="/js/mapSearch2.js"></script>
+
+{% endblock %}

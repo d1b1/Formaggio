@@ -21,6 +21,10 @@ routes:
     path: /map
     template: pages/map.html
 
+  map2:
+    path: /map2
+    template: pages/map2.html
+
   autoComplete:
     path: /autoComplete
     template: pages/autoComplete.html
