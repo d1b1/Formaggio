@@ -31,3 +31,18 @@ This code creates an index in Algolia using the Takeshape content Id.
 
 ### Costs
 All three of these services offer free plans that allow students to build an end to end search engine without spending a dime.
+
+### Example Sites
+The following are specialized domains for different topics and interests; from types of berries, to the best roads to drive fast.
+
+1. Farms Near Me (https://farmsnearme.netlify.com/)
+1. Vivo Vinoa (https://vivovino.netlify.com/)
+1. Chug (https://chug.netlify.com/)
+1. Berry Land (https://berryland.netlify.com/)
+1. Driven (https://roadsdriven.netlify.com/)
+1. Harry Potter Land (https://harrypotterland.netlify.com/)
+1. Hidden Bookstores (https://hidden-bookstore.netlify.com/)
+1. Pot Head (https://pothead.netlify.com/)
+1. Ice Cream Land (https://icecreamland.netlify.com/)
+1. Sunscreens (https://sunscreens.netlify.com/)
+
