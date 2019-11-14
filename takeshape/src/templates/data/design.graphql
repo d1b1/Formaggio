@@ -1,0 +1,14 @@
+query {
+	designs: getDesignList {
+		total
+		items {
+			_contentTypeName
+			_enabledAt
+			name
+			description
+			asset {
+				path
+			}
+		}
+	}
+}

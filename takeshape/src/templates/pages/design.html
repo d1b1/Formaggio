@@ -1,0 +1,29 @@
+{% extends "layouts/default.html" %}
+
+{% block content %}
+
+	<br>
+	<br>
+	<div class="columns">
+		<div class="column is-6">
+			<div class="card-image" style="border:1px solid #EFEFEF;">
+				<figure class="image is-4by3">
+					{% if design.asset %}
+					<img src="{{ design.asset.path | image }}" class="image is-32x32">
+					{% else %}
+					<img src="https://bulma.io/images/placeholders/1080x960.png" alt="Placeholder image">
+					{% endif %}
+				</figure>
+			</div>
+		</div>
+		<div class="column is-6">
+			<p class="title is-6">
+				{{ design.name }}
+			</p>
+			<div class="content">
+				{{ design.description }}
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

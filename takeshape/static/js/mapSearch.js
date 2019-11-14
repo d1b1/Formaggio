@@ -128,7 +128,10 @@ var customMapWidget = {
   	this._helper = params.helper;
     this._autocomplete = new google.maps.places.Autocomplete(this._autocompleteContainer);
     this._autocomplete.addListener('place_changed', this._handlePlaceChange.bind(this));
-    this._map = new google.maps.Map(this._mapContainer, {zoom: 1, center: new google.maps.LatLng(0, 0)});
+    this._map = new google.maps.Map(this._mapContainer, {
+			zoom: 1,
+			center: new google.maps.LatLng(0, 0)
+		});
   },
   render: function(params) {
     var markers = params.results.hits.map(this._hitToMarker.bind(this));

@@ -109,40 +109,61 @@ injectScript(
       })
     );
 
-		search.addWidget(
-			instantsearch.widgets.hits({
-				container: '#hits',
-				templates: {
-					item: `
-						<figure class="image is-48x48" style="padding: 5px; border:1px solid #DFDFDF; float: left; margin-right: 10px;">
-							<img src="{{ photoUrl}}">
-						</figure>
-						<h4>
-							{{{ _highlightResult.name.value }}}
-						</h4>
-						Milk: {{ characteristics.milk }},
-						Texture: {{ characteristics.texture }}
-					`,
-					empty: `
-						<div id="no-results-message">
-							<p>
-								We didn't find any results for the search <em>"{{query}}"</em>.
-							</p>
-							<a href="." class='clear-all'>Clear search</a>
-						</div>
-					`
-				},
-				cssClasses: {
-					list: 'hit-list',
-					items: 'hit-item'
-				},
-				transformData: {
-					item(item) {
-						return item;
-					},
-				},
-			})
-		);
+		search.addWidget({
+		  render: function(data) {
+		  	var $hits = [];
+		    data.results.hits.forEach(function(hit) {
+		    	var $hit = $('<div class="hit">' + hit.name + '</div>');
+		      $hit.click(function() {
+		        console.log(hit, 'clicked');
+						console.log(window.google.maps);
+						var map = $("#map")
+						window.google.maps.setCenter(new google.maps.LatLng(54.57951, -4.41387));
+		      });
+		      $hits.push($hit);
+		    });
+		    $('#hits').html($hits);
+		  }
+		});
+
+		// search.addWidget(
+		// 	instantsearch.widgets.hits({
+		// 		container: '#hits',
+		// 		templates: {
+		// 			item: `
+		// 			hddd{{ item._geoloc }}
+		// 				<div onclick="go({{ item._geoloc.lat || 0}}, {{ item._geoloc.lng || 0}})">
+		// 				<figure class="image is-48x48" style="padding: 5px; border:1px solid #DFDFDF; float: left; margin-right: 10px;">
+		// 					<img src="{{ photoUrl}}">
+		// 				</figure>
+		// 				<h4>
+		// 					{{{ _highlightResult.name.value }}}
+		// 				</h4>
+		// 				Milk: {{ characteristics.milk }},
+		// 				Texture: {{ characteristics.texture }}
+		// 				</div>
+		// 			`,
+		// 			empty: `
+		// 				<div id="no-results-message">
+		// 					<p>
+		// 						We didn't find any results for the search <em>"{{query}}"</em>.
+		// 					</p>
+		// 					<a href="." class='clear-all'>Clear search</a>
+		// 				</div>
+		// 			`
+		// 		},
+		// 		cssClasses: {
+		// 			list: 'hit-list',
+		// 			items: 'hit-item'
+		// 		},
+		// 		transformData: {
+		// 			item(item) {
+		// 				console.log('ddd', item);
+		// 				return item;
+		// 			},
+		// 		},
+		// 	})
+		// );
 
     search.start();
   }
