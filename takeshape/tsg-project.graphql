@@ -3,6 +3,78 @@ schema {
   mutation: Mutations
 }
 
+type Agent implements TSSearchable {
+  description: String
+  hoursOfOperation: String
+  yearFounded: Int
+  type: [String]
+  socialMedia: AgentSocialMedia
+  assets: AgentAssets
+  secondaryName: String
+
+  """Name of the owner or operators."""
+  operators: String
+  websiteUrl: String
+  phone: String
+  geoLocation: AgentGeoLocation
+  name: String!
+  location: AgentLocation
+  email: String
+  _id: ID
+  _version: Int
+  _contentTypeId: String
+  _contentTypeName: String
+  _createdAt: String
+  _updatedAt: String
+  _enabled: Boolean
+  _enabledAt: String
+  searchSummary: String
+}
+
+type AgentAssets {
+  logo(locale: String, enableLocaleFallback: Boolean = true): Asset
+  logoUrl: String
+}
+
+input AgentAssetsInput {
+  logo: TSRelationshipInput
+  logoUrl: String
+}
+
+type AgentGeoLocation {
+  lng: Float
+  lat: Float
+}
+
+input AgentGeoLocationInput {
+  lng: Float
+  lat: Float
+}
+
+type AgentLocation {
+  addressLine1: String
+  country: String
+  addressLine2: String
+  zipOrPostalCode: String
+  state: String
+  city: String
+}
+
+input AgentLocationInput {
+  addressLine1: String
+  country: String
+  addressLine2: String
+  zipOrPostalCode: String
+  state: String
+  city: String
+}
+
+type AgentPaginatedList {
+  results: [Agent] @deprecated(reason: "Use items instead")
+  items: [Agent]
+  total: Int
+}
+
 """
 Content Type for a company that sells cheeses; i.e. Cheese Shops, Farmers Markets etc.
 """
@@ -14,6 +86,7 @@ type Agents implements TSSearchable {
   """Enter the website URL."""
   websiteUrl: String
   phone: String
+  geoLocation: AgentsGeoLocation
   name: String!
   logo(locale: String, enableLocaleFallback: Boolean = true): Asset
 
@@ -34,7 +107,6 @@ type Agents implements TSSearchable {
   _enabledAt: String
   _references(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): UndefinedReferencePaginatedList
   relatedCheese(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): CheesePaginatedList
-  test1Set(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): Test1PaginatedList
   searchSummary: String
 }
 
@@ -54,6 +126,58 @@ input AgentsAddressInput {
   addressLine2: String
   state: String
   city: String
+}
+
+"""A Agent search result"""
+type AgentSearchResult {
+  searchSummary: String
+  _updatedAt: String
+  _createdAt: String
+  _enabledAt: String
+  _enabled: Boolean
+  description: String
+  hoursOfOperation: String
+  yearFounded: Int
+  secondaryName: String
+  operators: String
+  websiteUrl: String
+  phone: String
+  name: String
+  email: String
+  _id: String
+  _version: Int
+  _contentTypeId: String
+  _contentTypeName: String
+}
+
+"""Agent search results"""
+type AgentSearchResults {
+  results: [AgentSearchResult]
+  total: Int
+}
+
+type AgentsGeoLocation {
+  lng: Float
+  lat: Float
+}
+
+input AgentsGeoLocationInput {
+  lng: Float
+  lat: Float
+}
+
+type AgentSocialMedia {
+  twitter: String
+  instragram: String
+  facebook: String
+  youTube: String
+}
+
+input AgentSocialMediaInput {
+  twitter: String
+  instragram: String
+  facebook: String
+  youTube: String
 }
 
 type AgentsPaginatedList {
@@ -139,7 +263,9 @@ type Asset implements TSSearchable {
   _enabled: Boolean
   _enabledAt: String
   _references(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): UndefinedReferencePaginatedList
+  agentSet(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): AgentPaginatedList
   cheeseSet(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): CheesePaginatedList
+  designSet(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): DesignPaginatedList
   agentsSet(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): AgentsPaginatedList
   searchSummary: String
 }
@@ -221,8 +347,10 @@ type Cheese implements TSSearchable {
   name: String!
   description: String
   labelOrPhoto(locale: String, enableLocaleFallback: Boolean = true): Asset
+  location: CheeseLocation
   source: String!
   photos: [CheesePhotos]
+  logoUrl: String
 
   """Enter a short pairing recommendation."""
   pairings: String
@@ -243,9 +371,10 @@ type Cheese implements TSSearchable {
 type CheeseCharacteristics {
   flavors: String
   covering: [String]!
-  texture: [String]!
-  aged: String!
+  texture: [String]
+  aged: String
   milk: [String]!
+  fatContent: String
   style: String
   rennetType: [String]!
   standardsAndProcessing: [String]
@@ -257,6 +386,7 @@ input CheeseCharacteristicsInput {
   texture: [String]
   aged: String
   milk: [String]
+  fatContent: String
   style: String
   rennetType: [String]
   standardsAndProcessing: [String]
@@ -301,6 +431,16 @@ type CheeseHardnessesSearchResults {
   total: Int
 }
 
+type CheeseLocation {
+  region: String
+  country: String
+}
+
+input CheeseLocationInput {
+  region: String
+  country: String
+}
+
 type CheesePaginatedList {
   results: [Cheese] @deprecated(reason: "Use items instead")
   items: [Cheese]
@@ -325,6 +465,7 @@ type CheeseSearchResult {
   name: String
   description: String
   source: String
+  logoUrl: String
   pairings: String
   _id: String
   _version: Int
@@ -351,6 +492,39 @@ input ContentStructureInput {
   structure: [Int]
 }
 
+"""create Agent input"""
+input CreateAgentInput {
+  description: String
+  hoursOfOperation: String
+  yearFounded: Int
+  type: [String]
+  socialMedia: AgentSocialMediaInput
+  assets: AgentAssetsInput
+  secondaryName: String
+
+  """Name of the owner or operators."""
+  operators: String
+  websiteUrl: String
+  phone: String
+  geoLocation: AgentGeoLocationInput
+  name: String!
+  location: AgentLocationInput
+  email: String
+  _id: ID
+  _version: Int
+  _contentTypeId: String
+  _createdAt: String
+  _updatedAt: String
+  _enabled: Boolean
+  _enabledAt: String
+  clientMutationId: String
+}
+
+type CreateAgentResult {
+  clientMutationId: String
+  result: Agent
+}
+
 """create Agents input"""
 input CreateAgentsInput {
   descriptionSummary: String
@@ -360,6 +534,7 @@ input CreateAgentsInput {
   """Enter the website URL."""
   websiteUrl: String
   phone: String
+  geoLocation: AgentsGeoLocationInput
   name: String!
   logo: TSRelationshipInput
 
@@ -437,8 +612,10 @@ input CreateCheeseInput {
   name: String!
   description: String
   labelOrPhoto: TSRelationshipInput
+  location: CheeseLocationInput
   source: String!
   photos: [CheesePhotosInput]
+  logoUrl: String
 
   """Enter a short pairing recommendation."""
   pairings: String
@@ -458,6 +635,28 @@ type CreateCheeseResult {
   result: Cheese
 }
 
+"""create Design input"""
+input CreateDesignInput {
+  name: String
+  description: String
+  website: String
+  asset: TSRelationshipInput
+  tags: String
+  _id: ID
+  _version: Int
+  _contentTypeId: String
+  _createdAt: String
+  _updatedAt: String
+  _enabled: Boolean
+  _enabledAt: String
+  clientMutationId: String
+}
+
+type CreateDesignResult {
+  clientMutationId: String
+  result: Design
+}
+
 """create Favorites input"""
 input CreateFavoritesInput {
   rating: String
@@ -475,25 +674,6 @@ input CreateFavoritesInput {
 type CreateFavoritesResult {
   clientMutationId: String
   result: Favorites
-}
-
-"""create Test1 input"""
-input CreateTest1Input {
-  singleLine: String
-  repeater: [Test1RepeaterInput]
-  _id: ID
-  _version: Int
-  _contentTypeId: String
-  _createdAt: String
-  _updatedAt: String
-  _enabled: Boolean
-  _enabledAt: String
-  clientMutationId: String
-}
-
-type CreateTest1Result {
-  clientMutationId: String
-  result: Test1
 }
 
 """create TsStaticSite input"""
@@ -537,6 +717,17 @@ input CreateUsersInput {
 type CreateUsersResult {
   clientMutationId: String
   result: Users
+}
+
+"""delete Agent input"""
+input DeleteAgentInput {
+  clientMutationId: String
+  _id: ID!
+}
+
+type DeleteAgentResult {
+  clientMutationId: String
+  result: Boolean
 }
 
 """delete Agents input"""
@@ -583,6 +774,17 @@ type DeleteCheeseResult {
   result: Boolean
 }
 
+"""delete Design input"""
+input DeleteDesignInput {
+  clientMutationId: String
+  _id: ID!
+}
+
+type DeleteDesignResult {
+  clientMutationId: String
+  result: Boolean
+}
+
 """delete Favorites input"""
 input DeleteFavoritesInput {
   clientMutationId: String
@@ -590,17 +792,6 @@ input DeleteFavoritesInput {
 }
 
 type DeleteFavoritesResult {
-  clientMutationId: String
-  result: Boolean
-}
-
-"""delete Test1 input"""
-input DeleteTest1Input {
-  clientMutationId: String
-  _id: ID!
-}
-
-type DeleteTest1Result {
   clientMutationId: String
   result: Boolean
 }
@@ -625,6 +816,52 @@ input DeleteUsersInput {
 type DeleteUsersResult {
   clientMutationId: String
   result: Boolean
+}
+
+type Design implements TSSearchable {
+  name: String
+  description: String
+  website: String
+  asset(locale: String, enableLocaleFallback: Boolean = true): Asset
+  tags: String
+  _id: ID
+  _version: Int
+  _contentTypeId: String
+  _contentTypeName: String
+  _createdAt: String
+  _updatedAt: String
+  _enabled: Boolean
+  _enabledAt: String
+  searchSummary: String
+}
+
+type DesignPaginatedList {
+  results: [Design] @deprecated(reason: "Use items instead")
+  items: [Design]
+  total: Int
+}
+
+"""A Design search result"""
+type DesignSearchResult {
+  searchSummary: String
+  _updatedAt: String
+  _createdAt: String
+  _enabledAt: String
+  _enabled: Boolean
+  name: String
+  description: String
+  website: String
+  tags: String
+  _id: String
+  _version: Int
+  _contentTypeId: String
+  _contentTypeName: String
+}
+
+"""Design search results"""
+type DesignSearchResults {
+  results: [DesignSearchResult]
+  total: Int
 }
 
 type Favorites implements TSSearchable {
@@ -790,47 +1027,19 @@ type Mutations {
   """Delete TsStaticSite"""
   deleteTsStaticSite(input: DeleteTsStaticSiteInput!): DeleteTsStaticSiteResult
 
-  """Create Cheese"""
-  createCheese(input: CreateCheeseInput!): CreateCheeseResult
+  """Create Agent"""
+  createAgent(input: CreateAgentInput!): CreateAgentResult
 
-  """Update Cheese"""
-  updateCheese(input: UpdateCheeseInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateCheeseResult
+  """Update Agent"""
+  updateAgent(input: UpdateAgentInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateAgentResult
 
-  """Delete Cheese"""
-  deleteCheese(input: DeleteCheeseInput!): DeleteCheeseResult
-
-  """
-  Create Cheese items from Asset csv, only single layer string fields are supported.
-  """
-  importCheeseListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
-
-  """Create Test1"""
-  createTest1(input: CreateTest1Input!): CreateTest1Result
-
-  """Update Test1"""
-  updateTest1(input: UpdateTest1Input!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateTest1Result
-
-  """Delete Test1"""
-  deleteTest1(input: DeleteTest1Input!): DeleteTest1Result
+  """Delete Agent"""
+  deleteAgent(input: DeleteAgentInput!): DeleteAgentResult
 
   """
-  Create Test1 items from Asset csv, only single layer string fields are supported.
+  Create Agent items from Asset csv, only single layer string fields are supported.
   """
-  importTest1ListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
-
-  """Create Users"""
-  createUsers(input: CreateUsersInput!): CreateUsersResult
-
-  """Update Users"""
-  updateUsers(input: UpdateUsersInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateUsersResult
-
-  """Delete Users"""
-  deleteUsers(input: DeleteUsersInput!): DeleteUsersResult
-
-  """
-  Create Users items from Asset csv, only single layer string fields are supported.
-  """
-  importUsersListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
+  importAgentListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
 
   """Create CheeseHardnesses"""
   createCheeseHardnesses(input: CreateCheeseHardnessesInput!): CreateCheeseHardnessesResult
@@ -846,20 +1055,6 @@ type Mutations {
   """
   importCheeseHardnessesListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
 
-  """Create Agents"""
-  createAgents(input: CreateAgentsInput!): CreateAgentsResult
-
-  """Update Agents"""
-  updateAgents(input: UpdateAgentsInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateAgentsResult
-
-  """Delete Agents"""
-  deleteAgents(input: DeleteAgentsInput!): DeleteAgentsResult
-
-  """
-  Create Agents items from Asset csv, only single layer string fields are supported.
-  """
-  importAgentsListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
-
   """Create Favorites"""
   createFavorites(input: CreateFavoritesInput!): CreateFavoritesResult
 
@@ -873,6 +1068,62 @@ type Mutations {
   Create Favorites items from Asset csv, only single layer string fields are supported.
   """
   importFavoritesListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
+
+  """Create Cheese"""
+  createCheese(input: CreateCheeseInput!): CreateCheeseResult
+
+  """Update Cheese"""
+  updateCheese(input: UpdateCheeseInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateCheeseResult
+
+  """Delete Cheese"""
+  deleteCheese(input: DeleteCheeseInput!): DeleteCheeseResult
+
+  """
+  Create Cheese items from Asset csv, only single layer string fields are supported.
+  """
+  importCheeseListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
+
+  """Create Design"""
+  createDesign(input: CreateDesignInput!): CreateDesignResult
+
+  """Update Design"""
+  updateDesign(input: UpdateDesignInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateDesignResult
+
+  """Delete Design"""
+  deleteDesign(input: DeleteDesignInput!): DeleteDesignResult
+
+  """
+  Create Design items from Asset csv, only single layer string fields are supported.
+  """
+  importDesignListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
+
+  """Create Users"""
+  createUsers(input: CreateUsersInput!): CreateUsersResult
+
+  """Update Users"""
+  updateUsers(input: UpdateUsersInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateUsersResult
+
+  """Delete Users"""
+  deleteUsers(input: DeleteUsersInput!): DeleteUsersResult
+
+  """
+  Create Users items from Asset csv, only single layer string fields are supported.
+  """
+  importUsersListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
+
+  """Create Agents"""
+  createAgents(input: CreateAgentsInput!): CreateAgentsResult
+
+  """Update Agents"""
+  updateAgents(input: UpdateAgentsInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateAgentsResult
+
+  """Delete Agents"""
+  deleteAgents(input: DeleteAgentsInput!): DeleteAgentsResult
+
+  """
+  Create Agents items from Asset csv, only single layer string fields are supported.
+  """
+  importAgentsListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
 }
 
 """Object representing a rejected item processed during the import."""
@@ -1082,8 +1333,8 @@ type Root {
     sort: [TSSearchSort]
   ): TsStaticSiteSearchResults
 
-  """Returns a list cheese in natural order."""
-  getCheeseList(
+  """Returns a list agent in natural order."""
+  getAgentList(
     locale: String
     enableLocaleFallback: Boolean = true
 
@@ -1102,13 +1353,13 @@ type Root {
 
     """An list of fields to sort by."""
     sort: [TSSearchSort]
-  ): CheesePaginatedList
+  ): AgentPaginatedList
 
-  """Get a cheese by ID"""
-  getCheese(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Cheese
+  """Get a agent by ID"""
+  getAgent(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Agent
 
-  """Search the cheese index by keyword"""
-  searchCheeseIndex(
+  """Search the agent index by keyword"""
+  searchAgentIndex(
     locale: String
     enableLocaleFallback: Boolean = true
     terms: String
@@ -1124,95 +1375,7 @@ type Root {
 
     """An list of fields to sort by."""
     sort: [TSSearchSort]
-  ): CheeseSearchResults
-
-  """Returns a list test1 in natural order."""
-  getTest1List(
-    locale: String
-    enableLocaleFallback: Boolean = true
-
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): Test1PaginatedList
-
-  """Get a test1 by ID"""
-  getTest1(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Test1
-
-  """Search the test1 index by keyword"""
-  searchTest1Index(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): Test1SearchResults
-
-  """Returns a list users in natural order."""
-  getUsersList(
-    locale: String
-    enableLocaleFallback: Boolean = true
-
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): UsersPaginatedList
-
-  """Get a users by ID"""
-  getUsers(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Users
-
-  """Search the users index by keyword"""
-  searchUsersIndex(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): UsersSearchResults
+  ): AgentSearchResults
 
   """Returns a list cheeseHardnesses in natural order."""
   getCheeseHardnessesList(
@@ -1258,50 +1421,6 @@ type Root {
     sort: [TSSearchSort]
   ): CheeseHardnessesSearchResults
 
-  """Returns a list agents in natural order."""
-  getAgentsList(
-    locale: String
-    enableLocaleFallback: Boolean = true
-
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): AgentsPaginatedList
-
-  """Get a agents by ID"""
-  getAgents(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Agents
-
-  """Search the agents index by keyword"""
-  searchAgentsIndex(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): AgentsSearchResults
-
   """Returns a list favorites in natural order."""
   getFavoritesList(
     locale: String
@@ -1345,65 +1464,183 @@ type Root {
     """An list of fields to sort by."""
     sort: [TSSearchSort]
   ): FavoritesSearchResults
+
+  """Returns a list cheese in natural order."""
+  getCheeseList(
+    locale: String
+    enableLocaleFallback: Boolean = true
+
+    """Filter out content that is not enabled. Defaults to true."""
+    onlyEnabled: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): CheesePaginatedList
+
+  """Get a cheese by ID"""
+  getCheese(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Cheese
+
+  """Search the cheese index by keyword"""
+  searchCheeseIndex(
+    locale: String
+    enableLocaleFallback: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): CheeseSearchResults
+
+  """Returns a list design in natural order."""
+  getDesignList(
+    locale: String
+    enableLocaleFallback: Boolean = true
+
+    """Filter out content that is not enabled. Defaults to true."""
+    onlyEnabled: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): DesignPaginatedList
+
+  """Get a design by ID"""
+  getDesign(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Design
+
+  """Search the design index by keyword"""
+  searchDesignIndex(
+    locale: String
+    enableLocaleFallback: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): DesignSearchResults
+
+  """Returns a list users in natural order."""
+  getUsersList(
+    locale: String
+    enableLocaleFallback: Boolean = true
+
+    """Filter out content that is not enabled. Defaults to true."""
+    onlyEnabled: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): UsersPaginatedList
+
+  """Get a users by ID"""
+  getUsers(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Users
+
+  """Search the users index by keyword"""
+  searchUsersIndex(
+    locale: String
+    enableLocaleFallback: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): UsersSearchResults
+
+  """Returns a list agents in natural order."""
+  getAgentsList(
+    locale: String
+    enableLocaleFallback: Boolean = true
+
+    """Filter out content that is not enabled. Defaults to true."""
+    onlyEnabled: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): AgentsPaginatedList
+
+  """Get a agents by ID"""
+  getAgents(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Agents
+
+  """Search the agents index by keyword"""
+  searchAgentsIndex(
+    locale: String
+    enableLocaleFallback: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): AgentsSearchResults
   withContext(locale: String, enableLocaleFallback: Boolean): WithContext
-}
-
-type Test1 implements TSSearchable {
-  singleLine: String
-  repeater: [Test1Repeater]
-  _id: ID
-  _version: Int
-  _contentTypeId: String
-  _contentTypeName: String
-  _createdAt: String
-  _updatedAt: String
-  _enabled: Boolean
-  _enabledAt: String
-  searchSummary: String
-}
-
-type Test1PaginatedList {
-  results: [Test1] @deprecated(reason: "Use items instead")
-  items: [Test1]
-  total: Int
-}
-
-type Test1Repeater {
-  object: Test1RepeaterObject
-}
-
-input Test1RepeaterInput {
-  object: Test1RepeaterObjectInput
-}
-
-type Test1RepeaterObject {
-  relationship(locale: String, enableLocaleFallback: Boolean = true): Agents
-  dropdown: String
-}
-
-input Test1RepeaterObjectInput {
-  relationship: TSRelationshipInput
-  dropdown: String
-}
-
-"""A Test1 search result"""
-type Test1SearchResult {
-  searchSummary: String
-  _updatedAt: String
-  _createdAt: String
-  _enabledAt: String
-  _enabled: Boolean
-  singleLine: String
-  _id: String
-  _version: Int
-  _contentTypeId: String
-  _contentTypeName: String
-}
-
-"""Test1 search results"""
-type Test1SearchResults {
-  results: [Test1SearchResult]
-  total: Int
 }
 
 type TSActivityLogItem {
@@ -1805,12 +2042,45 @@ input TSWebhooksInput {
   webhooks: [TSWebhookInput]
 }
 
-union UndefinedReference = Cheese | Agents
+union UndefinedReference = Agent | Cheese | Design | Agents
 
 type UndefinedReferencePaginatedList {
   results: [UndefinedReference] @deprecated(reason: "Use items instead")
   items: [UndefinedReference]
   total: Int
+}
+
+"""update Agent input"""
+input UpdateAgentInput {
+  description: String
+  hoursOfOperation: String
+  yearFounded: Int
+  type: [String]
+  socialMedia: AgentSocialMediaInput
+  assets: AgentAssetsInput
+  secondaryName: String
+
+  """Name of the owner or operators."""
+  operators: String
+  websiteUrl: String
+  phone: String
+  geoLocation: AgentGeoLocationInput
+  name: String
+  location: AgentLocationInput
+  email: String
+  _id: ID!
+  _version: Int
+  _contentTypeId: String
+  _createdAt: String
+  _updatedAt: String
+  _enabled: Boolean
+  _enabledAt: String
+  clientMutationId: String
+}
+
+type UpdateAgentResult {
+  clientMutationId: String
+  result: Agent
 }
 
 """update Agents input"""
@@ -1822,6 +2092,7 @@ input UpdateAgentsInput {
   """Enter the website URL."""
   websiteUrl: String
   phone: String
+  geoLocation: AgentsGeoLocationInput
   name: String
   logo: TSRelationshipInput
 
@@ -1899,8 +2170,10 @@ input UpdateCheeseInput {
   name: String
   description: String
   labelOrPhoto: TSRelationshipInput
+  location: CheeseLocationInput
   source: String
   photos: [CheesePhotosInput]
+  logoUrl: String
 
   """Enter a short pairing recommendation."""
   pairings: String
@@ -1920,6 +2193,28 @@ type UpdateCheeseResult {
   result: Cheese
 }
 
+"""update Design input"""
+input UpdateDesignInput {
+  name: String
+  description: String
+  website: String
+  asset: TSRelationshipInput
+  tags: String
+  _id: ID!
+  _version: Int
+  _contentTypeId: String
+  _createdAt: String
+  _updatedAt: String
+  _enabled: Boolean
+  _enabledAt: String
+  clientMutationId: String
+}
+
+type UpdateDesignResult {
+  clientMutationId: String
+  result: Design
+}
+
 """update Favorites input"""
 input UpdateFavoritesInput {
   rating: String
@@ -1937,25 +2232,6 @@ input UpdateFavoritesInput {
 type UpdateFavoritesResult {
   clientMutationId: String
   result: Favorites
-}
-
-"""update Test1 input"""
-input UpdateTest1Input {
-  singleLine: String
-  repeater: [Test1RepeaterInput]
-  _id: ID!
-  _version: Int
-  _contentTypeId: String
-  _createdAt: String
-  _updatedAt: String
-  _enabled: Boolean
-  _enabledAt: String
-  clientMutationId: String
-}
-
-type UpdateTest1Result {
-  clientMutationId: String
-  result: Test1
 }
 
 """update TsStaticSite input"""
@@ -2176,8 +2452,8 @@ type WithContext {
     sort: [TSSearchSort]
   ): TsStaticSiteSearchResults
 
-  """Returns a list cheese in natural order."""
-  getCheeseList(
+  """Returns a list agent in natural order."""
+  getAgentList(
     locale: String
     enableLocaleFallback: Boolean = true
 
@@ -2196,13 +2472,13 @@ type WithContext {
 
     """An list of fields to sort by."""
     sort: [TSSearchSort]
-  ): CheesePaginatedList
+  ): AgentPaginatedList
 
-  """Get a cheese by ID"""
-  getCheese(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Cheese
+  """Get a agent by ID"""
+  getAgent(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Agent
 
-  """Search the cheese index by keyword"""
-  searchCheeseIndex(
+  """Search the agent index by keyword"""
+  searchAgentIndex(
     locale: String
     enableLocaleFallback: Boolean = true
     terms: String
@@ -2218,95 +2494,7 @@ type WithContext {
 
     """An list of fields to sort by."""
     sort: [TSSearchSort]
-  ): CheeseSearchResults
-
-  """Returns a list test1 in natural order."""
-  getTest1List(
-    locale: String
-    enableLocaleFallback: Boolean = true
-
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): Test1PaginatedList
-
-  """Get a test1 by ID"""
-  getTest1(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Test1
-
-  """Search the test1 index by keyword"""
-  searchTest1Index(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): Test1SearchResults
-
-  """Returns a list users in natural order."""
-  getUsersList(
-    locale: String
-    enableLocaleFallback: Boolean = true
-
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): UsersPaginatedList
-
-  """Get a users by ID"""
-  getUsers(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Users
-
-  """Search the users index by keyword"""
-  searchUsersIndex(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): UsersSearchResults
+  ): AgentSearchResults
 
   """Returns a list cheeseHardnesses in natural order."""
   getCheeseHardnessesList(
@@ -2352,50 +2540,6 @@ type WithContext {
     sort: [TSSearchSort]
   ): CheeseHardnessesSearchResults
 
-  """Returns a list agents in natural order."""
-  getAgentsList(
-    locale: String
-    enableLocaleFallback: Boolean = true
-
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): AgentsPaginatedList
-
-  """Get a agents by ID"""
-  getAgents(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Agents
-
-  """Search the agents index by keyword"""
-  searchAgentsIndex(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-  ): AgentsSearchResults
-
   """Returns a list favorites in natural order."""
   getFavoritesList(
     locale: String
@@ -2439,4 +2583,180 @@ type WithContext {
     """An list of fields to sort by."""
     sort: [TSSearchSort]
   ): FavoritesSearchResults
+
+  """Returns a list cheese in natural order."""
+  getCheeseList(
+    locale: String
+    enableLocaleFallback: Boolean = true
+
+    """Filter out content that is not enabled. Defaults to true."""
+    onlyEnabled: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): CheesePaginatedList
+
+  """Get a cheese by ID"""
+  getCheese(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Cheese
+
+  """Search the cheese index by keyword"""
+  searchCheeseIndex(
+    locale: String
+    enableLocaleFallback: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): CheeseSearchResults
+
+  """Returns a list design in natural order."""
+  getDesignList(
+    locale: String
+    enableLocaleFallback: Boolean = true
+
+    """Filter out content that is not enabled. Defaults to true."""
+    onlyEnabled: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): DesignPaginatedList
+
+  """Get a design by ID"""
+  getDesign(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Design
+
+  """Search the design index by keyword"""
+  searchDesignIndex(
+    locale: String
+    enableLocaleFallback: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): DesignSearchResults
+
+  """Returns a list users in natural order."""
+  getUsersList(
+    locale: String
+    enableLocaleFallback: Boolean = true
+
+    """Filter out content that is not enabled. Defaults to true."""
+    onlyEnabled: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): UsersPaginatedList
+
+  """Get a users by ID"""
+  getUsers(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Users
+
+  """Search the users index by keyword"""
+  searchUsersIndex(
+    locale: String
+    enableLocaleFallback: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): UsersSearchResults
+
+  """Returns a list agents in natural order."""
+  getAgentsList(
+    locale: String
+    enableLocaleFallback: Boolean = true
+
+    """Filter out content that is not enabled. Defaults to true."""
+    onlyEnabled: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): AgentsPaginatedList
+
+  """Get a agents by ID"""
+  getAgents(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Agents
+
+  """Search the agents index by keyword"""
+  searchAgentsIndex(
+    locale: String
+    enableLocaleFallback: Boolean = true
+    terms: String
+
+    """The offset from the first result you want to fetch."""
+    from: Int
+
+    """The maximum number of items to return."""
+    size: Int
+
+    """An elasticsearch style filter. Overrides onlyEnabled."""
+    filter: JSON
+
+    """An list of fields to sort by."""
+    sort: [TSSearchSort]
+  ): AgentsSearchResults
 }

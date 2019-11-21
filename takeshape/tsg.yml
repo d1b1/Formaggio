@@ -33,12 +33,16 @@ routes:
     path: /tools
     template: pages/tools.html
 
-  designs: 
+  slides:
+    path: /slides
+    template: pages/slides.html
+
+  designs:
     path: /designs
     template: pages/designs.html
     context: data/design.graphql
 
-  designOne: 
+  designOne:
     path: /design/:name/
     template: pages/design.html
     paginate:

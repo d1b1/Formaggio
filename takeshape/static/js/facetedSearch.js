@@ -1,4 +1,5 @@
 
+
 app({
 	appId: 'OBBTFVLBPT',
 	apiKey: 'b2bb1464328d945084725777e82f0536',
@@ -6,6 +7,7 @@ app({
 });
 
 function app(opts) {
+
 	const search = instantsearch({
 		searchClient: algoliasearch(opts.appId, opts.apiKey),
 		indexName: opts.indexName,
@@ -130,7 +132,7 @@ function app(opts) {
 				noRefinementRoot: '<div class="sffv_no-results">No matching brands.</div>'
 			}
 		})
-	);
+	)
 
 	// Use this widget to add the list of Coverings.
 	search.addWidget(

@@ -22,6 +22,13 @@
 			</p>
 			<div class="content">
 				{{ design.description }}
+
+				{% if design.website %}
+				<br>
+				<a href="{{ design.website }}" target="_blank">
+					{{ design.website }}
+				</a>
+				{% endif %}
 			</div>
 		</div>
 	</div>
