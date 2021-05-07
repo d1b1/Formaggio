@@ -20,6 +20,6 @@
     "expressjs": "^1.0.1",
     "node-fetch": "^2.6.0",
     "title-case": "^2.1.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   }
 }
